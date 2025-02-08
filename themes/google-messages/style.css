@@ -201,7 +201,7 @@ body {
 		left: 15px;
 	}
 	.google-message-modal-content {
-		width: 43vh;
+		width: 335px;
 	}
 	.google-message-st-modal-close {
 		font-size: 32px;
@@ -235,7 +235,7 @@ body {
 
 @media screen and (max-width: 1000px) {
 	.google-message-modal-content {
-		width: 45.5vh;
+		width: 385px;
 	}
 	.google-message-general-modal-content {
 		min-width: 47vh;
@@ -279,7 +279,7 @@ body {
 
 #sheld {
 	border-radius: 15px;
-	height: 100vh;
+	height: 100%;
 	top: unset;
 	max-height: unset;
 }
