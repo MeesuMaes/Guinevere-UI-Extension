@@ -1,1 +1,10 @@
-/* All style elements for your extension go here */
+/* Guinevere UI Settings */
+.guinevere-drawer-content {
+	gap: 8px;
+	display: flex;
+	flex-direction: column;
+}
+
+.guinevere_block {
+	width: 100%;
+}

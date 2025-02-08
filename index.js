@@ -1,63 +1,196 @@
-// The main script for the extension
-// The following are examples of some basic extension functionality
-
-//You'll likely need to import extension_settings, getContext, and loadExtensionSettings from extensions.js
-import { extension_settings, getContext, loadExtensionSettings } from "../../../extensions.js";
-
-//You'll likely need to import some other functions from the main script
+import { extension_settings } from "../../../extensions.js";
+import { RA_CountCharTokens } from "../../../RossAscends-mods.js";
+import { debounce } from "../../../utils.js";
+import { debounce_timeout } from "../../../constants.js";
+import { eventSource, event_types } from "../../../../script.js";
+import {
+	extensionName,
+	extensionFolderPath,
+	defaultSettings,
+} from "./constants.js";
 import { saveSettingsDebounced } from "../../../../script.js";
 
-// Keep track of where your extension is located, name should match repo name
-const extensionName = "st-extension-example";
-const extensionFolderPath = `scripts/extensions/third-party/${extensionName}`;
-const extensionSettings = extension_settings[extensionName];
-const defaultSettings = {};
-
-
- 
-// Loads the extension settings if they exist, otherwise initializes them to the defaults.
 async function loadSettings() {
-  //Create the settings if they don't exist
-  extension_settings[extensionName] = extension_settings[extensionName] || {};
-  if (Object.keys(extension_settings[extensionName]).length === 0) {
-    Object.assign(extension_settings[extensionName], defaultSettings);
-  }
+	extension_settings[extensionName] = extension_settings[extensionName] || {};
+	if (Object.keys(extension_settings[extensionName]).length === 0) {
+		Object.assign(extension_settings[extensionName], defaultSettings);
+	}
 
-  // Updating settings in the UI
-  $("#example_setting").prop("checked", extension_settings[extensionName].example_setting).trigger("input");
+	$("#guinevere-enable").prop(
+		"checked",
+		extension_settings[extensionName].enabled,
+	);
+	$("#guinevere-theme-input").val(extension_settings[extensionName].theme);
+
+	extension_settings[extensionName].lastSuccessfulTheme = "";
+	saveSettingsDebounced();
 }
 
-// This function is called when the extension settings are changed in the UI
-function onExampleInput(event) {
-  const value = Boolean($(event.target).prop("checked"));
-  extension_settings[extensionName].example_setting = value;
-  saveSettingsDebounced();
+// Handles the enabling/disabling of Guinevere.
+function onThemeBoxClick(event) {
+	const value = Boolean($(event.target).prop("checked"));
+	extension_settings[extensionName].enabled = value;
+	saveSettingsDebounced();
+	if (!value) {
+		resetTheme();
+	}
 }
 
-// This function is called when the button is clicked
-function onButtonClick() {
-  // You can do whatever you want here
-  // Let's make a popup appear with the checked setting
-  toastr.info(
-    `The checkbox is ${extension_settings[extensionName].example_setting ? "checked" : "not checked"}`,
-    "A popup appeared because you clicked the button!"
-  );
+// Handles the input box for theme selection.
+function onThemeTextChange() {
+	// Get the value of the input box
+	const value = $("#guinevere-theme-input").val();
+	extension_settings[extensionName].theme = value;
+	saveSettingsDebounced();
+	toastr.success("Saved selected theme successfully.");
+}
+
+// Handles the application of Guinevere themes.
+function onThemeApplyClick() {
+	if (!extension_settings[extensionName].enabled) {
+		toastr.error("Guinevere is not enabled.");
+		return;
+	}
+	applyTheme();
+}
+
+// Handles the removal of Guinevere themes.
+function onThemeRemoveClick() {
+	resetTheme();
+	extension_settings[extensionName].enabled = false;
+	extension_settings[extensionName].theme = "";
+	saveSettingsDebounced();
+	$("#guinevere-enable").prop("checked", false);
+	$("#guinevere-theme-input").val("");
+}
+
+/**
+ * Executes the theme's code.js file.
+ * @param {any} themeDiv - The div to apply the theme to.
+ * @param {boolean} auto - Whether the theme is being applied automatically (on toggle/startup).
+ * @param {boolean} silent - Whether to suppress the success message.
+ */
+function executeCode(themeDiv, auto, silent) {
+    if (extension_settings[extensionName].theme === "") {
+        toastr.error("No theme selected.");
+        return;
+    }
+
+    const themeCode = `./themes/${extension_settings[extensionName].theme}/code.js`;
+    try {
+        import(themeCode)
+            .then((module) => {
+                module.execute(themeDiv);
+                extension_settings[extensionName].lastSuccessfulTheme = extension_settings[extensionName].theme;
+                saveSettingsDebounced();
+
+                if (!silent)
+                    toastr.success(
+                        `Applied '${extension_settings[extensionName].theme}' theme successfully.`,
+                    );
+            })
+            .catch((error) => {
+                toastr.error(
+                    `Failed to apply '${extension_settings[extensionName].theme}' theme${auto ? " automatically." : "."} Check console for more info.`,
+                );
+                console.error(error);
+            });
+    } catch (error) {
+        toastr.error(
+            `Failed to execute '${extension_settings[extensionName].theme}' code file${auto ? " automatically." : "."} Check console for more info.`,
+        );
+        console.error(error);
+    }
+}
+
+/**
+ * Executes the theme's disable code.
+ * @param {any} themeDiv - The div to remove the theme from.
+ */
+function executeDisableCode() {
+	if (!extension_settings[extensionName].theme === "") {
+		toastr.error("No theme selected.");
+		return;
+	}
+	if (extension_settings[extensionName].lastSuccessfulTheme === "") {
+		toastr.error("No theme has been successfully applied to revert from.");
+		return;
+	}
+
+	// import "disable" from theme's code.js file
+	const themeCode = `./themes/${extension_settings[extensionName].lastSuccessfulTheme}/code.js`;
+	try {
+		import(themeCode)
+			.then((module) => {
+				module.disable();
+			})
+			.catch((error) => {
+				toastr.error(
+					"Failed to revert to default theme. Check console for more info.",
+				);
+				console.error(error);
+			});
+	} catch (error) {
+		toastr.error(
+			"Failed to execute last successful theme's disable code. Check console for more info.",
+		);
+		console.error(error);
+	}
+}
+
+/**
+ * Applies a Guinevere theme to the page.
+ * @param {boolean} auto - Whether the theme is being applied automatically (on toggle/startup).
+ * @param {boolean} silent - Whether to suppress the success message.
+ */
+async function applyTheme(auto, silent) {
+	// Ensure the last theme is cleaned up before applying a new one
+	resetTheme(true);
+
+	const themeDiv = $("<div id='guinevere-theme'></div>");
+	if (extension_settings[extensionName].enabled) {
+		executeCode(themeDiv, auto, silent);
+	}
+}
+
+/**
+ * Resets the theme back to the default theme.
+ * @param {boolean} silent - Whether to suppress the success message.
+ * @returns {void}
+ */
+function resetTheme(silent) {
+	const themeDiv = $("#guinevere-theme");
+	if (themeDiv.length === 0) {
+		return;
+	}
+	executeDisableCode();
+	themeDiv.remove();
+	$("#guinevere-theme-input").val(extension_settings[extensionName].theme);
+	$("#guinevere-enable").prop(
+		"checked",
+		extension_settings[extensionName].enabled,
+	);
+	if (!silent)
+		toastr.success("Reverted to default theme.");
 }
 
 // This function is called when the extension is loaded
 jQuery(async () => {
-  // This is an example of loading HTML from a file
-  const settingsHtml = await $.get(`${extensionFolderPath}/example.html`);
+    const settingsHtml = await $.get(`${extensionFolderPath}/settings.html`);
+    $("#extensions_settings").append(settingsHtml);
 
-  // Append settingsHtml to extensions_settings
-  // extension_settings and extensions_settings2 are the left and right columns of the settings menu
-  // Left should be extensions that deal with system functions and right should be visual/UI related 
-  $("#extensions_settings").append(settingsHtml);
+    loadSettings();
 
-  // These are examples of listening for events
-  $("#my_button").on("click", onButtonClick);
-  $("#example_setting").on("input", onExampleInput);
+    $("#guinevere-enable").on("click", onThemeBoxClick);
+    $("#guinevere-apply").on("click", onThemeApplyClick);
+    $("#guinevere-reset").on("click", onThemeRemoveClick);
+    $("#guinevere-theme-text-button").on("click", onThemeTextChange);
 
-  // Load settings when starting things up (if you have any)
-  loadSettings();
+    await applyTheme(true, true);
+
+    const countTokensDebounced = debounce(
+        RA_CountCharTokens,
+        debounce_timeout.relaxed,
+    );
+    eventSource.on(event_types.CHAT_CHANGED, countTokensDebounced);
 });
