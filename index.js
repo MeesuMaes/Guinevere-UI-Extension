@@ -1,8 +1,4 @@
 import { extension_settings } from "../../../extensions.js";
-import { RA_CountCharTokens } from "../../../RossAscends-mods.js";
-import { debounce } from "../../../utils.js";
-import { debounce_timeout } from "../../../constants.js";
-import { eventSource, event_types } from "../../../../script.js";
 import {
 	extensionName,
 	extensionFolderPath,
@@ -80,7 +76,7 @@ function executeCode(themeDiv, auto, silent) {
     try {
         import(themeCode)
             .then((module) => {
-                module.execute(themeDiv);
+                module.execute(themeDiv, auto);
                 extension_settings[extensionName].lastSuccessfulTheme = extension_settings[extensionName].theme;
                 saveSettingsDebounced();
 
@@ -187,10 +183,4 @@ jQuery(async () => {
     $("#guinevere-theme-text-button").on("click", onThemeTextChange);
 
     await applyTheme(true, true);
-
-    const countTokensDebounced = debounce(
-        RA_CountCharTokens,
-        debounce_timeout.relaxed,
-    );
-    eventSource.on(event_types.CHAT_CHANGED, countTokensDebounced);
 });
