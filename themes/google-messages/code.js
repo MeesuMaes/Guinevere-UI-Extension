@@ -1,15 +1,25 @@
 import { extensionFolderPath } from "../../constants.js";
 import { select2ChoiceClickSubscribe } from "../../../../../utils.js";
 import { world_names } from "../../../../../world-info.js";
-import { eventSource, event_types, name1, characters, this_chid } from "../../../../../../script.js";
+import {
+	eventSource,
+	event_types,
+	name1,
+	characters,
+	this_chid,
+} from "../../../../../../script.js";
 import { user_avatar, getUserAvatars } from "../../../../../personas.js";
 import { debounce, getSortableDelay } from "../../../../../utils.js";
 import { debounce_timeout } from "../../../../../constants.js";
 import { getCharacters } from "../../../../../../script.js";
 import { getBackgrounds } from "../../../../../backgrounds.js";
 import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
-import { promptManager, oai_settings, TokenHandler } from "../../../../../openai.js";
-import { countTokensOpenAIAsync } from '../../../../../tokenizers.js';
+import {
+	promptManager,
+	oai_settings,
+	TokenHandler,
+} from "../../../../../openai.js";
+import { countTokensOpenAIAsync } from "../../../../../tokenizers.js";
 
 const profileDataDebounce = debounce(setProfile, debounce_timeout.quick);
 const personaDataDebounce = debounce(() => {
@@ -206,38 +216,40 @@ export async function execute(themeDiv, auto) {
 	eventSource.on(event_types.SETTINGS_UPDATED, refetchData);
 	eventSource.on(event_types.CHAT_CHANGED, countTokensDebounced);
 
-    const configuration = {
-        prefix: 'completion_',
-        containerIdentifier: 'completion_prompt_manager',
-        listIdentifier: 'completion_prompt_manager_list',
-        toggleDisabled: [],
-        sortableDelay: getSortableDelay(),
-        defaultPrompts: {
-            main: "",
-            nsfw: "",
-            jailbreak: "",
-            enhanceDefinitions: "",
-        },
-        promptOrder: {
-            strategy: 'global',
-            dummyId: 100001,
-        },
-    };
+	const configuration = {
+		prefix: "completion_",
+		containerIdentifier: "completion_prompt_manager",
+		listIdentifier: "completion_prompt_manager_list",
+		toggleDisabled: [],
+		sortableDelay: getSortableDelay(),
+		defaultPrompts: {
+			main: "",
+			nsfw: "",
+			jailbreak: "",
+			enhanceDefinitions: "",
+		},
+		promptOrder: {
+			strategy: "global",
+			dummyId: 100001,
+		},
+	};
 
-    promptManager.saveServiceSettings = () => {
-        saveSettingsDebounced();
-        return new Promise((resolve) => eventSource.once(event_types.SETTINGS_UPDATED, resolve));
-    };
-    promptManager.tryGenerate = () => {
-        if (characters[this_chid]) {
-            return Generate('normal', {}, true);
-        }
-            return Promise.resolve();
-    };
-    promptManager.tokenHandler = new TokenHandler(countTokensOpenAIAsync);
+	promptManager.saveServiceSettings = () => {
+		saveSettingsDebounced();
+		return new Promise((resolve) =>
+			eventSource.once(event_types.SETTINGS_UPDATED, resolve),
+		);
+	};
+	promptManager.tryGenerate = () => {
+		if (characters[this_chid]) {
+			return Generate("normal", {}, true);
+		}
+		return Promise.resolve();
+	};
+	promptManager.tokenHandler = new TokenHandler(countTokensOpenAIAsync);
 
-    promptManager.init(configuration, oai_settings);
-    promptManager.render(false);
+	promptManager.init(configuration, oai_settings);
+	promptManager.render(false);
 
 	topSettingsHolder.css("display", "none");
 	$("#top-bar").css("display", "none");
