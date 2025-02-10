@@ -288,6 +288,10 @@ body {
 	max-height: unset;
 }
 
+#completion_prompt_manager_popup {
+	max-width: 50%;
+}
+
 @media screen and (max-width: 1000px) {
 	.mes {
 		top: 60px;
