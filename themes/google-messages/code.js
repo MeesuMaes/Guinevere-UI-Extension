@@ -5,8 +5,6 @@ import {
 	eventSource,
 	event_types,
 	name1,
-	characters,
-	this_chid,
 } from "../../../../../../script.js";
 import { user_avatar, getUserAvatars } from "../../../../../personas.js";
 import { debounce, getSortableDelay } from "../../../../../utils.js";
@@ -20,7 +18,6 @@ import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
 import {
 	promptManager,
 	oai_settings,
-	TokenHandler,
 } from "../../../../../openai.js";
 import { countTokensOpenAIAsync } from "../../../../../tokenizers.js";
 
@@ -198,21 +195,6 @@ export async function execute(themeDiv, auto) {
 			dummyId: 100001,
 		},
 	};
-
-	promptManager.saveServiceSettings = () => {
-		saveSettingsDebounced();
-		return new Promise((resolve) =>
-			eventSource.once(event_types.SETTINGS_UPDATED, resolve),
-		);
-	};
-	promptManager.tryGenerate = () => {
-		if (characters[this_chid]) {
-			return Generate("normal", {}, true);
-		}
-		return Promise.resolve();
-	};
-	promptManager.tokenHandler = new TokenHandler(countTokensOpenAIAsync);
-
 	promptManager.init(configuration, oai_settings);
 	promptManager.render(false);
 
