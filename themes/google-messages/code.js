@@ -11,7 +11,10 @@ import {
 import { user_avatar, getUserAvatars } from "../../../../../personas.js";
 import { debounce, getSortableDelay } from "../../../../../utils.js";
 import { debounce_timeout } from "../../../../../constants.js";
-import { getCharacters } from "../../../../../../script.js";
+import {
+	getCharacters,
+	saveSettingsDebounced,
+} from "../../../../../../script.js";
 import { getBackgrounds } from "../../../../../backgrounds.js";
 import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
 import {
@@ -122,69 +125,6 @@ export async function execute(themeDiv, auto) {
 			stPreviewerContents.addClass("google-message-st-option-preview");
 			stPreviewer.append(stPreviewerContents);
 
-			// For WI, we have to re-assign the select2 instance to the new div
-			if (stPreviewerContents.attr("id") === "WorldInfo") {
-				const newClick = stPreviewer.find("#WorldInfo").find("#world_info");
-				const oldSpan = stPreviewer
-					.find("#WorldInfo")
-					.find(".range-block-range")
-					.find("span");
-				oldSpan.remove();
-
-				newClick.select2({
-					width: "100%",
-					placeholder: "No Worlds active. Click here to select.",
-					allowClear: true,
-					closeOnSelect: false,
-				});
-
-				select2ChoiceClickSubscribe(
-					newClick,
-					(target) => {
-						const name = $(target).text();
-						const selectedIndex = world_names.indexOf(name);
-						if (selectedIndex !== -1) {
-							$("#world_editor_select").val(selectedIndex).trigger("change");
-							console.log("Quick selection of world", name);
-						}
-					},
-					{ buttonStyle: true, closeDrawer: true },
-				);
-
-				if (auto) {
-					// If this is automatic, add a select2 instance to the old world_info div
-					// Resetting to defaults after theme is applied causes code breakage.
-					const oldClick = topSettingsHolder
-						.find("#WorldInfo")
-						.find("#world_info");
-					const stSpan = topSettingsHolder
-						.find("#WorldInfo")
-						.find(".range-block-range")
-						.find("span");
-					stSpan.remove();
-
-					oldClick.select2({
-						width: "100%",
-						placeholder: "No Worlds active. Click here to select.",
-						allowClear: true,
-						closeOnSelect: false,
-					});
-
-					select2ChoiceClickSubscribe(
-						oldClick,
-						(target) => {
-							const name = $(target).text();
-							const selectedIndex = world_names.indexOf(name);
-							if (selectedIndex !== -1) {
-								$("#world_editor_select").val(selectedIndex).trigger("change");
-								console.log("Quick selection of world", name);
-							}
-						},
-						{ buttonStyle: true, closeDrawer: true },
-					);
-				}
-			}
-
 			// Alter on click to show/hide the cloned div in the previewer
 			stButton.on("click", () => {
 				stPreviewer.children().css("display", "none");
@@ -198,6 +138,31 @@ export async function execute(themeDiv, auto) {
 					.addClass("closedIcon");
 			});
 		});
+
+		// Handles assignment of select2 code to the new div
+		const newClick = stPreviewer.find("#WorldInfo").find("#world_info");
+		const oldSpan = stPreviewer.find("#WorldInfo").find(".range-block-range").find("span");
+		oldSpan.remove();
+
+		newClick.select2({
+			width: "100%",
+			placeholder: "No Worlds active. Click here to select.",
+			allowClear: true,
+			closeOnSelect: false,
+		});
+
+		select2ChoiceClickSubscribe(
+			newClick,
+			(target) => {
+				const name = $(target).text();
+				const selectedIndex = world_names.indexOf(name);
+				if (selectedIndex !== -1) {
+					$("#world_editor_select").val(selectedIndex).trigger("change");
+					console.log("Quick selection of world", name);
+				}
+			},
+			{ buttonStyle: true, closeDrawer: true },
+		);
 	} catch (error) {
 		throw Error(error);
 	}
@@ -256,8 +221,37 @@ export async function execute(themeDiv, auto) {
 }
 
 export function disable() {
+	const topSettingsHolder = $("#top-settings-holder");
+
+	const oldClick = topSettingsHolder.find("#WorldInfo").find("#world_info");
+	const stSpan = topSettingsHolder
+		.find("#WorldInfo")
+		.find(".range-block-range")
+		.find("span");
+	stSpan.remove();
+
+	oldClick.select2({
+		width: "100%",
+		placeholder: "No Worlds active. Click here to select.",
+		allowClear: true,
+		closeOnSelect: false,
+	});
+
+	select2ChoiceClickSubscribe(
+		oldClick,
+		(target) => {
+			const name = $(target).text();
+			const selectedIndex = world_names.indexOf(name);
+			if (selectedIndex !== -1) {
+				$("#world_editor_select").val(selectedIndex).trigger("change");
+				console.log("Quick selection of world", name);
+			}
+		},
+		{ buttonStyle: true, closeDrawer: true },
+	);
+
 	// remove display element from top-settings-holder
-	$("#top-settings-holder").css("display", "flex");
+	topSettingsHolder.css("display", "flex");
 	$("#top-bar").css("display", "flex");
 
 	// remove css
