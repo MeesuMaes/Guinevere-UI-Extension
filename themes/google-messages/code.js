@@ -11,7 +11,6 @@ import { debounce, getSortableDelay } from "../../../../../utils.js";
 import { debounce_timeout } from "../../../../../constants.js";
 import {
 	getCharacters,
-	saveSettingsDebounced,
 } from "../../../../../../script.js";
 import { getBackgrounds } from "../../../../../backgrounds.js";
 import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
@@ -19,7 +18,6 @@ import {
 	promptManager,
 	oai_settings,
 } from "../../../../../openai.js";
-import { countTokensOpenAIAsync } from "../../../../../tokenizers.js";
 
 const profileDataDebounce = debounce(setProfile, debounce_timeout.quick);
 const personaDataDebounce = debounce(() => {
