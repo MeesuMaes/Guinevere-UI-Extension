@@ -1,23 +1,14 @@
 import { extensionFolderPath } from "../../constants.js";
 import { select2ChoiceClickSubscribe } from "../../../../../utils.js";
 import { world_names } from "../../../../../world-info.js";
-import {
-	eventSource,
-	event_types,
-	name1,
-} from "../../../../../../script.js";
+import { eventSource, event_types, name1 } from "../../../../../../script.js";
 import { user_avatar, getUserAvatars } from "../../../../../personas.js";
 import { debounce, getSortableDelay } from "../../../../../utils.js";
 import { debounce_timeout } from "../../../../../constants.js";
-import {
-	getCharacters,
-} from "../../../../../../script.js";
+import { getCharacters } from "../../../../../../script.js";
 import { getBackgrounds } from "../../../../../backgrounds.js";
 import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
-import {
-	promptManager,
-	oai_settings,
-} from "../../../../../openai.js";
+import { promptManager, oai_settings } from "../../../../../openai.js";
 
 const profileDataDebounce = debounce(setProfile, debounce_timeout.quick);
 const personaDataDebounce = debounce(() => {
@@ -136,7 +127,10 @@ export async function execute(themeDiv, auto) {
 
 		// Handles assignment of select2 code to the new div
 		const newClick = stPreviewer.find("#WorldInfo").find("#world_info");
-		const oldSpan = stPreviewer.find("#WorldInfo").find(".range-block-range").find("span");
+		const oldSpan = stPreviewer
+			.find("#WorldInfo")
+			.find(".range-block-range")
+			.find("span");
 		oldSpan.remove();
 
 		newClick.select2({
