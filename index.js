@@ -102,9 +102,9 @@ function executeCode(themeDiv, auto, silent) {
 
 /**
  * Executes the theme's disable code.
- * @param {any} themeDiv - The div to remove the theme from.
+ * @param {any} [themeDiv] - The div to remove the theme from.
  */
-function executeDisableCode() {
+function executeDisableCode(themeDiv) {
 	if (!extension_settings[extensionName].theme === "") {
 		toastr.error("No theme selected.");
 		return;
@@ -119,7 +119,7 @@ function executeDisableCode() {
 	try {
 		import(themeCode)
 			.then((module) => {
-				module.disable();
+				module.disable(themeDiv);
 			})
 			.catch((error) => {
 				toastr.error(
@@ -160,8 +160,7 @@ function resetTheme(silent) {
 	if (themeDiv.length === 0) {
 		return;
 	}
-	executeDisableCode();
-	themeDiv.remove();
+	executeDisableCode(themeDiv);
 	$("#guinevere-theme-input").val(extension_settings[extensionName].theme);
 	$("#guinevere-enable").prop(
 		"checked",

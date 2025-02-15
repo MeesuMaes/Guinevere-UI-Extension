@@ -1,6 +1,6 @@
 {
 	"display_name": "Guinevere-UI-Extension",
-	"loading_order": 15, 
+	"loading_order": 99, 
 	"requires": [],
 	"optional": [],
 	"js": "index.js",
