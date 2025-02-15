@@ -161,11 +161,11 @@ export async function execute(themeDiv, auto) {
 	$("#top-bar").css("display", "none");
 }
 
-export function disable(themeDiv) {
+export function disable() {
 	const topSettingsHolder = $("#top-settings-holder");
 
 	// Detach all elements from the new div to the old div
-	const stPreviewer = themeDiv.find("#google-st-preview");
+	const stPreviewer = $("#guinevere-theme").find("#google-st-preview");
 
 	for (const [key, value] of Object.entries(ATTACH_TO_FROM)) {
 		const oldDrawerContent = topSettingsHolder.find(`#${key}`);
@@ -210,5 +210,4 @@ export function disable(themeDiv) {
 
 	// remove css
 	$("#guinevere-theme-css").remove();
-	themeDiv.remove();
 }

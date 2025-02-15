@@ -119,7 +119,7 @@ function executeDisableCode(themeDiv) {
 	try {
 		import(themeCode)
 			.then((module) => {
-				module.disable(themeDiv);
+				module.disable();
 			})
 			.catch((error) => {
 				toastr.error(
@@ -133,6 +133,7 @@ function executeDisableCode(themeDiv) {
 		);
 		console.error(error);
 	}
+	themeDiv.remove();
 }
 
 /**

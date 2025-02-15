@@ -62,12 +62,9 @@ export async function execute(themeDiv, auto) {
 
 /**
  * Disables the Template theme code.
- * @param {any} themeDiv - The div to remove the theme from
  */
-export function disable(themeDiv) {
+export function disable() {
 	// Your removal code here (if applicable)
-
 	// Removes the theme's CSS. If you used your own CSS file, uncomment this.
 	// $("#guinevere-theme-css").remove();
-	themeDiv.remove();
 }
