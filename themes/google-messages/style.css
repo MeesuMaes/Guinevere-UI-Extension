@@ -118,14 +118,14 @@ body {
 /* Google Messages General Modal */
 .google-message-general-modal-content {
 	background-color: #131313;
-	margin: 10% auto;
-	width: 60%; /* Adjust modal width as needed */
+	margin: 5% auto;
+	width: 95%; /* Adjust modal width as needed */
+	max-height: 90%;
 	border-radius: 10px; /* Rounded corners */
 	box-shadow: 0 4px 8px 0 var(--border_color);
 	color: var(--main_text_color);
 	position: relative; /* To position close button */
 	padding: 10px;
-	max-height: 60vh;
 }
 
 .google-message-st-modal-title-div {
@@ -175,7 +175,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	padding: 0px 0px 0px 8px;
-	width: 70px;
+	width: 60px;
 }
 
 .google-message-st-options::selection {
@@ -188,7 +188,7 @@ body {
 	flex-direction: column;
 	overflow-y: auto;
 	width: 100%;
-	max-height: 53vh;
+	max-height: 70vh;
 }
 
 .google-message-st-option-preview {
