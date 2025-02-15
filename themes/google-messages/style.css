@@ -196,7 +196,7 @@ body {
 }
 
 /* Modify the modal content for mobile */
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 400px) {
 	.google-message-modal {
 		left: 15px;
 	}
@@ -233,7 +233,7 @@ body {
 	}
 }
 
-@media screen and (min-width: 769px) and (max-width: 1000px) {
+@media screen and (min-width: 401px) and (max-width: 1000px) {
 	.google-message-modal-content {
 		width: 385px;
 	}
