@@ -67,4 +67,5 @@ export function disable() {
 	// Your removal code here (if applicable)
 	// Removes the theme's CSS. If you used your own CSS file, uncomment this.
 	// $("#guinevere-theme-css").remove();
+	$("#guinevere-theme").empty();
 }

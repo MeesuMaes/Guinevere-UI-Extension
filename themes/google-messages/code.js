@@ -210,4 +210,5 @@ export function disable() {
 
 	// remove css
 	$("#guinevere-theme-css").remove();
+	$("#guinevere-theme").empty();
 }

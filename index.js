@@ -102,9 +102,8 @@ function executeCode(themeDiv, auto, silent) {
 
 /**
  * Executes the theme's disable code.
- * @param {any} [themeDiv] - The div to remove the theme from.
  */
-function executeDisableCode(themeDiv) {
+function executeDisableCode() {
 	if (!extension_settings[extensionName].theme === "") {
 		toastr.error("No theme selected.");
 		return;
@@ -133,7 +132,6 @@ function executeDisableCode(themeDiv) {
 		);
 		console.error(error);
 	}
-	themeDiv.remove();
 }
 
 /**
