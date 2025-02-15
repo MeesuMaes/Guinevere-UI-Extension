@@ -201,7 +201,7 @@ body {
 		left: 15px;
 	}
 	.google-message-modal-content {
-		width: 335px;
+		width: 345px;
 	}
 	.google-message-st-modal-close {
 		font-size: 32px;
@@ -233,12 +233,12 @@ body {
 	}
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (min-width: 769px) and (max-width: 1000px) {
 	.google-message-modal-content {
 		width: 385px;
 	}
 	.google-message-general-modal-content {
-		min-width: 47vh;
+		min-width: 43vh;
 		max-height: unset;
 	}
 }
