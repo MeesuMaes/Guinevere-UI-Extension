@@ -1,11 +1,11 @@
 {
 	"display_name": "Guinevere-UI-Extension",
-	"loading_order": 15, 
+	"loading_order": 99, 
 	"requires": [],
 	"optional": [],
 	"js": "index.js",
 	"css": "style.css",
 	"author": "Bronya Rand",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"homePage": "https://github.com/Bronya-Rand/Guinevere-UI-Extension"
 }

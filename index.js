@@ -102,7 +102,6 @@ function executeCode(themeDiv, auto, silent) {
 
 /**
  * Executes the theme's disable code.
- * @param {any} themeDiv - The div to remove the theme from.
  */
 function executeDisableCode() {
 	if (!extension_settings[extensionName].theme === "") {
@@ -160,8 +159,7 @@ function resetTheme(silent) {
 	if (themeDiv.length === 0) {
 		return;
 	}
-	executeDisableCode();
-	themeDiv.remove();
+	executeDisableCode(themeDiv);
 	$("#guinevere-theme-input").val(extension_settings[extensionName].theme);
 	$("#guinevere-enable").prop(
 		"checked",

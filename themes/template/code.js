@@ -14,8 +14,13 @@
 
 import { extensionFolderPath } from "../../constants.js";
 
-export async function execute(themeDiv) {
-	// Don't touch this unless you want to keep the top bar.
+/**
+ * Executes the Template theme code.
+ * @param {any} themeDiv - The div to apply the theme to
+ * @param {*} auto - Whether the theme is being applied automatically (on toggle/startup)
+ */
+export async function execute(themeDiv, auto) {
+	// Don't touch this.
 	const topSettingsHolder = $("#top-settings-holder");
 	if (!topSettingsHolder.length) {
 		throw Error("Failed to find top-settings-holder.");
@@ -53,19 +58,14 @@ export async function execute(themeDiv) {
 	// } catch (error) {
 	// 	throw Error(error);
 	// };
-
-	// This hides the top bar. If you want to keep it, remove these lines.
-	topSettingsHolder.css("display", "none");
-	$("#top-bar").css("display", "none");
 }
 
+/**
+ * Disables the Template theme code.
+ */
 export function disable() {
-	// This shows the top bar. If you kept the bar, remove/comment these lines.
-	$("#top-settings-holder").css("display", "flex");
-	$("#top-bar").css("display", "flex");
-
 	// Your removal code here (if applicable)
-
 	// Removes the theme's CSS. If you used your own CSS file, uncomment this.
 	// $("#guinevere-theme-css").remove();
+	$("#guinevere-theme").empty();
 }

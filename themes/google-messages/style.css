@@ -28,7 +28,6 @@ body {
 .google-message-modal {
 	display: none;
 	z-index: 1000;
-	left: 0;
 	top: 0;
 	overflow: auto;
 	width: 100%;
@@ -43,7 +42,6 @@ body {
 	border-radius: 25px;
 	top: 78px;
 	right: 29px;
-	width: 410px;
 	/* min-height: 535px; */
 	min-height: 300px;
 	overflow-y: auto;
@@ -118,14 +116,14 @@ body {
 /* Google Messages General Modal */
 .google-message-general-modal-content {
 	background-color: #131313;
-	margin: 10% auto;
-	width: 60%; /* Adjust modal width as needed */
+	margin: 5% auto;
+	width: 95%; /* Adjust modal width as needed */
+	max-height: 90%;
 	border-radius: 10px; /* Rounded corners */
 	box-shadow: 0 4px 8px 0 var(--border_color);
 	color: var(--main_text_color);
 	position: relative; /* To position close button */
 	padding: 10px;
-	max-height: 60vh;
 }
 
 .google-message-st-modal-title-div {
@@ -136,14 +134,12 @@ body {
 
 .google-message-st-modal-title {
 	color: var(--main_text_color);
-	font-size: 20px;
 	font-weight: 500;
 	padding: 0px 0px 0px 10px;
 }
 
 .google-message-st-modal-close {
 	color: #aaa;
-	font-size: 36px;
 	font-weight: bold;
 	background: none;
 	border: none;
@@ -167,15 +163,11 @@ body {
 .google-message-st-modal-settings2 {
 	display: flex;
 	justify-content: center;
-	flex-direction: row;
 	height: 100%;
 }
 
 .google-message-st-options {
 	display: flex;
-	flex-direction: column;
-	padding: 0px 0px 0px 8px;
-	width: 70px;
 }
 
 .google-message-st-options::selection {
@@ -188,7 +180,7 @@ body {
 	flex-direction: column;
 	overflow-y: auto;
 	width: 100%;
-	max-height: 53vh;
+	max-height: 70vh;
 }
 
 .google-message-st-option-preview {
@@ -196,12 +188,12 @@ body {
 }
 
 /* Modify the modal content for mobile */
-@media screen and (max-width: 768px) {
+@media screen and (min-width: 360px) {
 	.google-message-modal {
 		left: 15px;
 	}
 	.google-message-modal-content {
-		width: 335px;
+		width: 330px;
 	}
 	.google-message-st-modal-close {
 		font-size: 32px;
@@ -215,17 +207,15 @@ body {
 	.google-message-st-options {
 		flex-direction: row;
 		width: unset;
+		padding: 0px 0px 5px 0px;
+		overflow-x: scroll;
 	}
 	.google-message-general-modal-content {
-		min-width: 45vh;
+		min-width: 43vh;
 		max-height: unset;
 	}
-	.google-message-st-options {
-		flex-direction: row;
-		padding: 0px 0px 5px 0px;
-	}
 	.google-message-st-options-preview {
-		max-height: 72vh;
+		max-height: 71vh;
 		height: unset;
 	}
 	.google-message-st-modal-title-div {
@@ -233,12 +223,55 @@ body {
 	}
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (min-width: 375px) {
+	.google-message-modal-content {
+		width: 340px;
+	}
+}
+
+@media screen and (min-width: 400px) {
+	.google-message-modal-content {
+		width: 385px;
+	}
+	.google-message-st-options {
+		flex-direction: row;
+		padding: 0px 0px 0px 8px;
+		width: unset;
+	}
+	.google-message-st-options-preview {
+		max-height: 72vh;
+		height: unset;
+	}
+	.google-message-st-modal-close {
+		font-size: 36px;
+	}
+	.google-message-st-modal-title {
+		font-size: 20px;
+	}
+}
+
+@media screen and (min-width: 500px) {
+	.google-message-st-options {
+		flex-direction: column;
+		width: 60px;
+	}
+	.google-message-st-modal-settings2 {
+		flex-direction: row;
+	}
+	.google-message-modal {
+		left: 0;
+	}
+	.google-message-modal-content {
+		width: 410px;
+	}
+}
+
+@media screen and (min-width: 1000px) {
 	.google-message-modal-content {
 		width: 385px;
 	}
 	.google-message-general-modal-content {
-		min-width: 47vh;
+		min-width: 43vh;
 		max-height: unset;
 	}
 }

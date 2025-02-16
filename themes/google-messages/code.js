@@ -2,27 +2,18 @@ import { extensionFolderPath } from "../../constants.js";
 import { select2ChoiceClickSubscribe } from "../../../../../utils.js";
 import { world_names } from "../../../../../world-info.js";
 import { eventSource, event_types, name1 } from "../../../../../../script.js";
-import { user_avatar, getUserAvatars } from "../../../../../personas.js";
-import { debounce, getSortableDelay } from "../../../../../utils.js";
+import { user_avatar } from "../../../../../personas.js";
+import { debounce } from "../../../../../utils.js";
 import { debounce_timeout } from "../../../../../constants.js";
-import { getCharacters } from "../../../../../../script.js";
-import { getBackgrounds } from "../../../../../backgrounds.js";
-import { RA_CountCharTokens } from "../../../../../RossAscends-mods.js";
-import { promptManager, oai_settings } from "../../../../../openai.js";
 
+/**
+ * Records the detachable elements from the old div to the new div.
+ * @type {Object.<string, string>}
+ * @property {string} key - The id of the old div (top-settings-holder).
+ * @property {string} value - The id of the new div (google-st-preview).
+ */
+const ATTACH_TO_FROM = {};
 const profileDataDebounce = debounce(setProfile, debounce_timeout.quick);
-const personaDataDebounce = debounce(() => {
-	getUserAvatars(true, user_avatar);
-}, debounce_timeout.relaxed);
-const characterDataDebounce = debounce(getCharacters, debounce_timeout.relaxed);
-const backgroundDataDebounce = debounce(
-	getBackgrounds,
-	debounce_timeout.relaxed,
-);
-const countTokensDebounced = debounce(
-	RA_CountCharTokens,
-	debounce_timeout.relaxed,
-);
 
 function setProfile() {
 	if (name1.length > 0) {
@@ -39,13 +30,6 @@ function setProfile() {
 			`User Avatars/${user_avatar}`,
 		);
 	}
-}
-
-async function refetchData() {
-	await profileDataDebounce();
-	await personaDataDebounce();
-	await characterDataDebounce();
-	await backgroundDataDebounce();
 }
 
 /**
@@ -107,14 +91,16 @@ export async function execute(themeDiv, auto) {
 				drawerContent.attr("id", backupId);
 			}
 
-			const stPreviewerContents = drawerContent.clone(true);
-			stPreviewerContents.addClass("google-message-st-option-preview");
-			stPreviewer.append(stPreviewerContents);
+			drawerContent.detach();
+			stPreviewer.append(drawerContent);
+			stPreviewer
+				.find(`#${drawerContent.attr("id")}`)
+				.addClass("google-message-st-option-preview");
 
 			// Alter on click to show/hide the cloned div in the previewer
 			stButton.on("click", () => {
 				stPreviewer.children().css("display", "none");
-				stPreviewerContents.css("display", "contents");
+				drawerContent.css("display", "contents");
 				stButton.children().addClass("openIcon");
 				stButton.children().removeClass("closedIcon");
 				stButton
@@ -123,6 +109,8 @@ export async function execute(themeDiv, auto) {
 					.removeClass("openIcon")
 					.addClass("closedIcon");
 			});
+
+			ATTACH_TO_FROM[$(this).attr("id")] = drawerContent.attr("id");
 		});
 
 		// Handles assignment of select2 code to the new div
@@ -167,28 +155,7 @@ export async function execute(themeDiv, auto) {
 		throw Error(error);
 	}
 
-	eventSource.on(event_types.SETTINGS_UPDATED, refetchData);
-	eventSource.on(event_types.CHAT_CHANGED, countTokensDebounced);
-
-	const configuration = {
-		prefix: "completion_",
-		containerIdentifier: "completion_prompt_manager",
-		listIdentifier: "completion_prompt_manager_list",
-		toggleDisabled: [],
-		sortableDelay: getSortableDelay(),
-		defaultPrompts: {
-			main: "",
-			nsfw: "",
-			jailbreak: "",
-			enhanceDefinitions: "",
-		},
-		promptOrder: {
-			strategy: "global",
-			dummyId: 100001,
-		},
-	};
-	promptManager.init(configuration, oai_settings);
-	promptManager.render(false);
+	eventSource.on(event_types.SETTINGS_UPDATED, profileDataDebounce);
 
 	topSettingsHolder.css("display", "none");
 	$("#top-bar").css("display", "none");
@@ -196,6 +163,19 @@ export async function execute(themeDiv, auto) {
 
 export function disable() {
 	const topSettingsHolder = $("#top-settings-holder");
+
+	// Detach all elements from the new div to the old div
+	const stPreviewer = $("#guinevere-theme").find("#google-st-preview");
+
+	for (const [key, value] of Object.entries(ATTACH_TO_FROM)) {
+		const oldDrawerContent = topSettingsHolder.find(`#${key}`);
+		const newDrawerContent = stPreviewer.find(`#${value}`);
+
+		newDrawerContent.removeClass("google-message-st-option-preview");
+		newDrawerContent.css("display", "none");
+		newDrawerContent.detach();
+		oldDrawerContent.append(newDrawerContent);
+	}
 
 	const oldClick = topSettingsHolder.find("#WorldInfo").find("#world_info");
 	const stSpan = topSettingsHolder
@@ -230,4 +210,5 @@ export function disable() {
 
 	// remove css
 	$("#guinevere-theme-css").remove();
+	$("#guinevere-theme").empty();
 }
