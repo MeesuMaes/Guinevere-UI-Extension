@@ -47,7 +47,16 @@ A SillyTavern that supports extensions. Preferably a modern one.
 
 #### Via Download Extensions & Assets (Easiest)
 
-Download Extensions & Assets install possibly soon. For now use the `Via Install Extension` route.
+1. Click _Extensions_ then **Download Extensions & Assets**
+2. Click the red power plug button and then OK.
+3. Scroll down to find `Guinevere UI Extension` and click the Download button.
+4. Refresh the SillyTavern page.
+5. Click on _Extensions_ again and click down on the `Guinevere (UI Theme Extension)` dropdown and toggle _Enable Guinevere_.
+6. Install a *Guinevere* theme to your SillyTavern data folder (`data/default-user/extensions/Guinevere-UI-Extension/themes`) or use the included Google Messages theme (google-messages)!
+    > Make sure all the theme files are in a folder.
+7. Click the check-box to save the theme.
+8. Click the Apply Theme box.
+9. Profit.
 
 #### Via Install Extension
 
@@ -55,7 +64,7 @@ Download Extensions & Assets install possibly soon. For now use the `Via Install
 2. Paste in the following **link** into the text field and click Save: `https://github.com/Bronya-Rand/Guinevere-UI-Extension`.
 3. Refresh the SillyTavern page.
 4. Click on _Extensions_ again and click down on the `Guinevere (UI Theme Extension)` dropdown and toggle _Enable Guinevere_.
-5. Install a *Guinevere* theme to your SillyTavern data folder (`data/default-user/extensions/Guinevere-UI-Extension/themes`) or use the included Google Messages theme!
+5. Install a *Guinevere* theme to your SillyTavern data folder (`data/default-user/extensions/Guinevere-UI-Extension/themes`) or use the included Google Messages theme (google-messages)!
     > Make sure all the theme files are in a folder.
 6. Click the check-box to save the theme.
 7. Click the Apply Theme box.
