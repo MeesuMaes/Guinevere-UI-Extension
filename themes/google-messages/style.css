@@ -68,7 +68,8 @@ body {
 	font-size: 22px;
 	font-weight: 300;
 	text-align: center;
-	max-height: 23px;
+	min-height: 23px;
+	margin: 0.85vh;
 }
 
 .google-message-modal-settings {
