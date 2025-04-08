@@ -5,6 +5,7 @@ import {
 	defaultSettings,
 } from "./constants.js";
 import { saveSettingsDebounced } from "../../../../script.js";
+import { getTranslation } from "../../../i18n.js"; // 假设i18n模块路径
 
 async function loadSettings() {
 	extension_settings[extensionName] = extension_settings[extensionName] || {};
@@ -34,17 +35,16 @@ function onThemeBoxClick(event) {
 
 // Handles the input box for theme selection.
 function onThemeTextChange() {
-	// Get the value of the input box
 	const value = $("#guinevere-theme-input").val();
 	extension_settings[extensionName].theme = value;
 	saveSettingsDebounced();
-	toastr.success("Saved selected theme successfully.");
+	toastr.success(getTranslation("theme.saved_success")); // 修改为i18n
 }
 
 // Handles the application of Guinevere themes.
 function onThemeApplyClick() {
 	if (!extension_settings[extensionName].enabled) {
-		toastr.error("Guinevere is not enabled.");
+		toastr.error(getTranslation("theme.not_enabled")); // 修改为i18n
 		return;
 	}
 	applyTheme();
@@ -68,7 +68,7 @@ function onThemeRemoveClick() {
  */
 function executeCode(themeDiv, auto, silent) {
 	if (extension_settings[extensionName].theme === "") {
-		toastr.error("No theme selected.");
+		toastr.error(getTranslation("theme.no_theme_selected")); // 修改为i18n
 		return;
 	}
 
@@ -83,18 +83,18 @@ function executeCode(themeDiv, auto, silent) {
 
 				if (!silent)
 					toastr.success(
-						`Applied '${extension_settings[extensionName].theme}' theme successfully.`,
+						getTranslation("theme.applied_success", {theme: extension_settings[extensionName].theme}) // 修改为i18n
 					);
 			})
 			.catch((error) => {
 				toastr.error(
-					`Failed to apply '${extension_settings[extensionName].theme}' theme${auto ? " automatically." : "."} Check console for more info.`,
+					getTranslation(auto ? "theme.apply_failed_auto" : "theme.apply_failed") // 修改为i18n
 				);
 				console.error(error);
 			});
 	} catch (error) {
 		toastr.error(
-			`Failed to execute '${extension_settings[extensionName].theme}' code file${auto ? " automatically." : "."} Check console for more info.`,
+			getTranslation(auto ? "theme.execute_failed_auto" : "theme.execute_failed") // 修改为i18n
 		);
 		console.error(error);
 	}
@@ -105,11 +105,11 @@ function executeCode(themeDiv, auto, silent) {
  */
 function executeDisableCode() {
 	if (!extension_settings[extensionName].theme === "") {
-		toastr.error("No theme selected.");
+		toastr.error(getTranslation("theme.no_theme_selected")); // 修改为i18n
 		return;
 	}
 	if (extension_settings[extensionName].lastSuccessfulTheme === "") {
-		toastr.error("No theme has been successfully applied to revert from.");
+		toastr.error(getTranslation("theme.no_previous_theme")); // 修改为i18n
 		return;
 	}
 
@@ -121,15 +121,11 @@ function executeDisableCode() {
 				module.disable();
 			})
 			.catch((error) => {
-				toastr.error(
-					"Failed to revert to default theme. Check console for more info.",
-				);
+				toastr.error(getTranslation("theme.revert_failed")); // 修改为i18n
 				console.error(error);
 			});
 	} catch (error) {
-		toastr.error(
-			"Failed to execute last successful theme's disable code. Check console for more info.",
-		);
+		toastr.error(getTranslation("theme.disable_failed")); // 修改为i18n
 		console.error(error);
 	}
 }
@@ -165,7 +161,7 @@ function resetTheme(silent) {
 		"checked",
 		extension_settings[extensionName].enabled,
 	);
-	if (!silent) toastr.success("Reverted to default theme.");
+	if (!silent) toastr.success(getTranslation("theme.reverted_default")); // 修改为i18n
 }
 
 // This function is called when the extension is loaded
