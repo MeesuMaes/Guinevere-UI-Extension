@@ -5,7 +5,7 @@ import {
 	defaultSettings,
 } from "./constants.js";
 import { saveSettingsDebounced } from "../../../../script.js";
-import { getTranslation } from "../../../i18n.js"; // 假设i18n模块路径
+import { initI18n, getTranslation } from "./i18n.js"; // 修改i18n导入路径为相对路径
 
 async function loadSettings() {
 	extension_settings[extensionName] = extension_settings[extensionName] || {};
