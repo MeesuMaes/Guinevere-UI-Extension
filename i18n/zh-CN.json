@@ -1,0 +1,20 @@
+{
+    "theme": {
+        "saved_success": "主题保存成功",
+        "not_enabled": "Guinevere未启用",
+        "no_theme_selected": "未选择主题",
+        "applied_success": "成功应用'{theme}'主题",
+        "apply_failed": "应用主题失败，请检查控制台",
+        "apply_failed_auto": "自动应用主题失败，请检查控制台",
+        "execute_failed": "执行主题代码失败，请检查控制台",
+        "execute_failed_auto": "自动执行主题代码失败，请检查控制台",
+        "no_previous_theme": "没有已应用的主题可恢复",
+        "revert_failed": "恢复默认主题失败",
+        "disable_failed": "禁用主题失败",
+        "reverted_default": "已恢复默认主题"
+    }
+}
+{
+    "Theme folder name": "主题文件夹的名称",
+    "Guinevere UI Extension Version": "Guinevere UI扩展版本"
+}
